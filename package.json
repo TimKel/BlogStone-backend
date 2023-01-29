@@ -22,7 +22,8 @@
     "jsonschema": "^1.4.1",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "superagent": "^8.0.9"
   },
   "proxy": "http://localhost:3001/"
 }
