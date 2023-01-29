@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { NotFoundError } = require("./expressError.js");
 
 const postRoutes = require("./routes/posts.js");
 const authRoutes = require("./routes/auth.js");
