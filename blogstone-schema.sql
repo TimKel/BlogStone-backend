@@ -12,5 +12,6 @@ CREATE TABLE posts (
     content TEXT NOT NULL,
     img TEXT NOT NULL,
     post_date DATE NOT NULL,
+    cat TEXT,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
 );
