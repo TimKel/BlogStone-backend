@@ -6,6 +6,7 @@ const { NotFoundError} = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 
 
+
 /** Related functions for companies. */
 
 class Post {
@@ -19,11 +20,13 @@ class Post {
 
  static async getPostsByCat(cat) {
 
-    const q = req.query.cat `SELECT *
-                            FROM posts
-                            WHERE cat = ${cat}`
+    const q = `SELECT *
+                FROM posts
+                WHERE cat = $1::text`
+                              
                                 
-    const postRes = await db.query(q, [req.query.cat]);
+    const postRes = await db.query(q, [cat]);
+    // console.log("POSTRES", postRes);
 
     const posts = postRes.rows;
 
@@ -33,16 +36,28 @@ class Post {
   }
 
   static async getAllPosts(){
-      let q = `SELECT * FROM posts`;
+    let q = `SELECT * FROM posts`;
 
-      const res = await db.query(q);
-      console.log(res);
+    const res = await db.query(q);
+    console.log(res);
 
-      const postRes = res.rows;
+    const postRes = res.rows;
 
-    //   if(!postRes) throw new NotFoundError(`No current posts. Post something!`);
+    if(!postRes) throw new NotFoundError(`No current posts. Post something!`);
     
-      return postRes;
+    return postRes;
+  }
+
+  static async getPostById(id){
+    const getPost = await db.query(
+          `SELECT * FROM posts 
+          WHERE id = $1`, [id]);
+    
+    const post = getPost.rows[0];
+
+    if(!post) throw new NotFoundError(`Oops! This post may have been deleted or moved.`)
+    
+    return post;
   }
 
 }
