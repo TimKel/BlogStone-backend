@@ -49,15 +49,34 @@ class Post {
   }
 
   static async getPostById(id){
+    // const getPost = await db.query(
+    //       `SELECT * FROM posts 
+    //       WHERE id = $1`, [id]);
+
     const getPost = await db.query(
-          `SELECT * FROM posts 
-          WHERE id = $1`, [id]);
+        `SELECT username, title, content, p.img, u.img AS userImg, cat, post_date
+        FROM users u 
+        JOIN posts p ON u.id = p.user_id
+        WHERE p.id = $1`, [id]
+    )
     
     const post = getPost.rows[0];
 
     if(!post) throw new NotFoundError(`Oops! This post may have been deleted or moved.`)
     
     return post;
+  }
+
+  static async removePost(id){
+      const res = await db.query(
+          `DELETE FROM posts
+          WHERE id = $1
+          RETURNING id`, [id]
+      )
+
+      const post = res.rows[0];
+
+      if(!post) throw new NotFoundError(`No post to delete with id of ${id}`)
   }
 
 }
