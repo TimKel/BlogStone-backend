@@ -3,6 +3,7 @@ const { addPost } = require("../controllers/post.js");
 const Post = require("../models/post.js");
 const db = require("../db");
 const { NotFoundError } = require("../expressError.js");
+const { ensureLoggedIn } = require("../middleware/auth.js");
 
 const router = express.Router()
 
@@ -98,8 +99,13 @@ router.post("/", (req, res) => {
     
 });
 
-router.delete("/:id", (req, res) => {
-    
+router.delete("/:id",ensureLoggedIn, async (req, res, next) => {
+    try{
+        await Post.removePost(req.params.id)
+        return res.json({ deleted: +req.params.id })
+    } catch(err){
+        return next(err);
+    }
 });
 
 router.patch("/:id", (req, res) => {
