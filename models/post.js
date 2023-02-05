@@ -79,6 +79,26 @@ class Post {
       if(!post) throw new NotFoundError(`No post to delete with id of ${id}`)
   }
 
+  static async addPost({title, content, img, post_date, cat, user_id}){
+      const res = await db.query(
+          `INSERT INTO posts
+          (title, content, img, post_date, cat, user_id) 
+          VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING title, content, img, post_date, cat, user_id`,
+        [title,
+            content,
+            img,
+            post_date,
+            cat,
+            user_id]
+      );
+      console.log("RES", res.rows[0])
+
+      const newPost = res.rows[0];
+
+      return newPost;
+  }
+
 }
 
 module.exports = Post;
