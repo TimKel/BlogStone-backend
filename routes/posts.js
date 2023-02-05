@@ -85,7 +85,7 @@ router.get("/", async (req, res, next) => {
 
 
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", ensureLoggedIn, async (req, res, next) => {
     try {
         const post = await Post.getPostById(req.params.id);
         return res.json({ post });
@@ -95,7 +95,14 @@ router.get("/:id", async (req, res, next) => {
 });
 
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res, next) => {
+    try {
+        const post = await Post.addPost(req.body);
+        console.log("POST", post)
+        return res.json({post})
+    } catch(err){
+        return next(err)
+    }
     
 });
 
