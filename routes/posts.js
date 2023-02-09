@@ -85,7 +85,7 @@ router.get("/", async (req, res, next) => {
 
 
 
-router.get("/:id", ensureLoggedIn, async (req, res, next) => {
+router.get("/:id", async (req, res, next) => {
     try {
         const post = await Post.getPostById(req.params.id);
         return res.json({ post });
@@ -95,7 +95,7 @@ router.get("/:id", ensureLoggedIn, async (req, res, next) => {
 });
 
 
-router.post("/", async (req, res, next) => {
+router.post("/", ensureLoggedIn, async (req, res, next) => {
     try {
         const post = await Post.addPost(req.body);
         console.log("POST", post)
