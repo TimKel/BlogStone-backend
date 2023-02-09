@@ -80,18 +80,35 @@ class Post {
   }
 
   static async addPost({title, content, img, post_date, cat, user_id}){
+
+      const date = new Date();
       const res = await db.query(
           `INSERT INTO posts
           (title, content, img, post_date, cat, user_id) 
           VALUES ($1, $2, $3, $4, $5, $6)
+          SELECT u.id
+          FROM users u
+          INNER JOIN users
+          ON u.id=posts.user_id
             RETURNING title, content, img, post_date, cat, user_id`,
         [title,
             content,
             img,
-            post_date,
+            date,
             cat,
             user_id]
       );
+
+        // INSERT INTO posts
+        //   (title, content, img, post_date, cat, user_id) 
+        //   VALUES ($1, $2, $3, $4, $5, $6)
+        //   WHERE user_id=user.id
+        //     RETURNING title, content, img, post_date, cat, user_id
+
+        // INSERT INTO posts (column1, column2, column3, ...)
+        // SELECT id
+        // FROM users
+        // WHERE condition;
       console.log("RES", res.rows[0])
 
       const newPost = res.rows[0];
