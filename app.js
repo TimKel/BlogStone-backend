@@ -7,6 +7,7 @@ const multer = require("multer");
 const postRoutes = require("./routes/posts.js");
 const authRoutes = require("./routes/auth.js");
 const userRoutes = require("./routes/users.js");
+const { authenticateJWT } = require("./middleware/auth.js");
 
 const app = express();
 
@@ -14,9 +15,11 @@ const app = express();
 app.use(express.json())
 app.use(cors());
 app.use(cookieParser());
+app.use(authenticateJWT);
 
+//dest: becomes {storage}
 const upload = multer({ dest: './uploads/' })
-app.post('/upload', upload.single('img'), function (req, res, next){
+app.post('/Blogstone/blogstone-backend/upload', upload.single('img'), function (req, res, next){
   res.status(200).json("Image has been uploaded")
 })
 //!!IF NEEDED, 1:24::
@@ -24,6 +27,7 @@ app.post('/upload', upload.single('img'), function (req, res, next){
 app.use("/posts", postRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
+
 
 
 
