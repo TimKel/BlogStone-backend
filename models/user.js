@@ -99,7 +99,8 @@ class User {
   static async get(username) {
     const userRes = await db.query(
           `SELECT username,
-                  email
+                  email,
+                  id
            FROM users
            WHERE username = $1`,
         [username],
