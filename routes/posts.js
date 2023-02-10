@@ -115,8 +115,23 @@ router.delete("/:id",ensureLoggedIn, async (req, res, next) => {
     }
 });
 
-router.patch("/:id", (req, res) => {
-    
-});
+
+router.patch("/:id/update", async function (req, res, next) {
+    try {
+    //   const validator = jsonschema.validate(req.body, jobUpdateSchema);
+    //   if (!validator.valid) {
+    //     const errs = validator.errors.map(e => e.stack);
+    //     throw new BadRequestError(errs);
+    //   }
+        console.log("HELLOOOO")
+        const post = await Post.getPostById(req.params.id);
+        console.log("POSTYYYY", post)
+      const updatePost = await Post.update(req.params.id, req.body);
+      console.log("UPDATEPOSTYYYY", post)
+      return res.json({ UPDATED: updatePost });
+    } catch (err) {
+      return next(err);
+    }
+  });
 
 module.exports = router;
