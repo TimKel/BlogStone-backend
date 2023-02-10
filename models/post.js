@@ -27,7 +27,7 @@ class Post {
                                 
     const postRes = await db.query(q, [cat]);
     // console.log("POSTRES", postRes);
-
+    
     const posts = postRes.rows;
 
     if (!posts) throw new NotFoundError(`No posts with category: ${cat}`);
@@ -82,14 +82,11 @@ class Post {
   static async addPost({title, content, img, post_date, cat, user_id}){
 
       const date = new Date();
+
       const res = await db.query(
           `INSERT INTO posts
           (title, content, img, post_date, cat, user_id) 
           VALUES ($1, $2, $3, $4, $5, $6)
-          SELECT u.id
-          FROM users u
-          INNER JOIN users
-          ON u.id=posts.user_id
             RETURNING title, content, img, post_date, cat, user_id`,
         [title,
             content,
@@ -114,6 +111,28 @@ class Post {
       const newPost = res.rows[0];
 
       return newPost;
+  }
+
+  static async update(id, data) {
+    const { setCols, values } = sqlForPartialUpdate(
+        data,
+        {});
+    const idVarIdx = "$" + (values.length + 1);
+
+    const querySql = `UPDATE posts 
+                      SET ${setCols} 
+                      WHERE id = ${idVarIdx} 
+                      RETURNING id, 
+                                title, 
+                                content, 
+                                img,
+                                cat`;
+    const result = await db.query(querySql, [...values, id]);
+    const post = result.rows[0];
+
+    if (!post) throw new NotFoundError(`No post: ${id}`);
+
+    return post;
   }
 
 }
