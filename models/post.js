@@ -4,7 +4,7 @@ const { post } = require("superagent");
 const db = require("../db");
 const { NotFoundError} = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
-
+const moment = require("moment");
 
 
 /** Related functions for companies. */
@@ -54,7 +54,7 @@ class Post {
     //       WHERE id = $1`, [id]);
 
     const getPost = await db.query(
-        `SELECT username, title, content, p.img, u.img AS userImg, cat, post_date
+        `SELECT username, title, content, p.img, u.profile_img, cat, post_date
         FROM users u 
         JOIN posts p ON u.id = p.user_id
         WHERE p.id = $1`, [id]
@@ -80,8 +80,18 @@ class Post {
   }
 
   static async addPost({title, content, img, post_date, cat, user_id}){
-
-      const date = new Date();
+      const date = moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
+      const dateStamp = new Date()
+    //   const date = dateStamp.toLocaleDateString(
+    //     'en-us',
+    //   {
+    //     hour12: true,
+    //     weekday: "short",
+    //     hour: "2-digit",
+    //     month: "long",
+    //     year: "numeric",
+    //     }
+    // );
 
       const res = await db.query(
           `INSERT INTO posts
