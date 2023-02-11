@@ -1,6 +1,8 @@
 "use strict";
 
 const db = require("../db");
+const axios = require("axios");
+const { faker }= require("@faker-js/faker");
 const bcrypt = require("bcrypt");
 const {
     NotFoundError,
@@ -67,18 +69,25 @@ class User {
       }
   
       const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
-  
+      
+      // console.log("FAKER", faker.image.avatar());
+      // const res = await axios.get(faker.image.imageUrl);
+      // console.log("RES", res)
+      const profile_img = faker.image.avatar()
+      console.log("profile", profile_img)
       const result = await db.query(
             `INSERT INTO users
              (username,
               password,
-              email)
-             VALUES ($1, $2, $3)
-             RETURNING username, email`,
+              email,
+              profile_img)
+             VALUES ($1, $2, $3, $4)
+             RETURNING username, email, profile_img`,
           [
             username,
             hashedPassword,
             email,
+            profile_img
           ],
       );
   
