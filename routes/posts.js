@@ -2,7 +2,7 @@ const express = require("express");
 const { addPost } = require("../controllers/post.js");
 const Post = require("../models/post.js");
 const db = require("../db");
-const { NotFoundError } = require("../expressError.js");
+const { NotFoundError, UnauthorizedError } = require("../expressError.js");
 const { ensureLoggedIn } = require("../middleware/auth.js");
 
 const router = express.Router()
@@ -99,6 +99,8 @@ router.post("/", ensureLoggedIn, async (req, res, next) => {
     try {
         const post = await Post.addPost(req.body);
         console.log("POST", post)
+        console.log("USERLOCAL", res.locals.user)
+        // if(!res.locals.user) return res.redirect("/")
         return res.json({post})
     } catch(err){
         return next(err)
@@ -106,7 +108,7 @@ router.post("/", ensureLoggedIn, async (req, res, next) => {
     
 });
 
-router.delete("/:id",ensureLoggedIn, async (req, res, next) => {
+router.delete("/:id", ensureLoggedIn, async (req, res, next) => {
     try{
         await Post.removePost(req.params.id)
         return res.json({ deleted: +req.params.id })
@@ -116,7 +118,7 @@ router.delete("/:id",ensureLoggedIn, async (req, res, next) => {
 });
 
 
-router.patch("/:id/update", async function (req, res, next) {
+router.patch("/post/:id/update", async function (req, res, next) {
     try {
     //   const validator = jsonschema.validate(req.body, jobUpdateSchema);
     //   if (!validator.valid) {
@@ -128,7 +130,7 @@ router.patch("/:id/update", async function (req, res, next) {
         console.log("POSTYYYY", post)
       const updatePost = await Post.update(req.params.id, req.body);
       console.log("UPDATEPOSTYYYY", post)
-      return res.json({ UPDATED: updatePost });
+      return res.json({ success: updatePost });
     } catch (err) {
       return next(err);
     }
