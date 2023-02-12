@@ -97,7 +97,7 @@ class Post {
           `INSERT INTO posts
           (title, content, img, post_date, cat, user_id) 
           VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING title, content, img, post_date, cat, user_id`,
+            RETURNING id, title, content, img, post_date, cat, user_id`,
         [title,
             content,
             img,
