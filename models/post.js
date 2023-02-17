@@ -5,6 +5,7 @@ const db = require("../db");
 const { NotFoundError} = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const moment = require("moment");
+const axios = require("axios");
 
 
 /** Related functions for companies. */
@@ -54,7 +55,26 @@ class Post {
     //       WHERE id = $1`, [id]);
 
     const getPost = await db.query(
-        `SELECT username, title, content, p.img, u.profile_img, cat, post_date
+        `SELECT u.username, title, content, p.img, u.profile_img, cat, post_date
+        FROM users u 
+        JOIN posts p ON u.id = p.user_id
+        WHERE p.id = $1`, [id]
+    )
+    
+    const post = getPost.rows[0];
+
+    if(!post) throw new NotFoundError(`Oops! This post may have been deleted or moved.`)
+    
+    return post;
+  }
+  //NEW
+  static async getPostForUpdate(id){
+    // const getPost = await db.query(
+    //       `SELECT * FROM posts 
+    //       WHERE id = $1`, [id]);
+
+    const getPost = await db.query(
+        `SELECT p.title, p.content, p.img, p.cat, p.post_date, p.user_id
         FROM users u 
         JOIN posts p ON u.id = p.user_id
         WHERE p.id = $1`, [id]
@@ -82,6 +102,12 @@ class Post {
   static async addPost({title, content, img, post_date, cat, user_id}){
       const date = moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
       const dateStamp = new Date()
+
+      const photo = await axios.get('https://picsum.photos/400')
+      console.log("PHOTO BODY", photo.request.res.responseUrl);
+      let generatePhoto = photo.request.res.responseUrl;
+      console.log("PHOTO URL", generatePhoto);
+      img === "" ? img = generatePhoto : img
     //   const date = dateStamp.toLocaleDateString(
     //     'en-us',
     //   {
