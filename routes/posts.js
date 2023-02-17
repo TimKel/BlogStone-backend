@@ -93,9 +93,18 @@ router.get("/:id", async (req, res, next) => {
         return next(err);
       }
 });
+//NEW
+router.get("/post/:id/update", async (req, res, next) => {
+    try {
+        const post = await Post.getPostForUpdate(req.params.id);
+        return res.json({ post });
+      } catch (err) {
+        return next(err);
+      }
+});
 
 
-router.post("/", ensureLoggedIn, async (req, res, next) => {
+router.post("/", async (req, res, next) => {
     try {
         const post = await Post.addPost(req.body);
         console.log("POST", post)
@@ -118,20 +127,23 @@ router.delete("/:id", ensureLoggedIn, async (req, res, next) => {
 });
 
 
-router.patch("/post/:id/update", async function (req, res, next) {
+router.patch("/post/:id/update", ensureLoggedIn, async function (req, res, next) {
     try {
     //   const validator = jsonschema.validate(req.body, jobUpdateSchema);
     //   if (!validator.valid) {
     //     const errs = validator.errors.map(e => e.stack);
     //     throw new BadRequestError(errs);
     //   }
-        console.log("HELLOOOO")
-        const post = await Post.getPostById(req.params.id);
-        console.log("POSTYYYY", post)
+        
+        // const post = await Post.getPostById(req.params.id);
+        // console.log("POSTY", post)
+        // console.log("USERLOCAL", res.locals.user)
+        // if(!res.locals.user) throw new Error("NOT AUTH")
       const updatePost = await Post.update(req.params.id, req.body);
-      console.log("UPDATEPOSTYYYY", post)
+      console.log("UPDATEPOST", updatePost)
       return res.json({ success: updatePost });
     } catch (err) {
+        console.log(err)
       return next(err);
     }
   });
