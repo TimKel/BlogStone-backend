@@ -17,11 +17,11 @@ app.use(cors());
 app.use(cookieParser());
 app.use(authenticateJWT);
 
-//dest: becomes {storage}
-const upload = multer({ dest: './uploads/' })
-app.post('/Blogstone/blogstone-backend/upload', upload.single('img'), function (req, res, next){
-  res.status(200).json("Image has been uploaded")
-})
+// //dest: becomes {storage}
+// const upload = multer({ dest: './uploads/' })
+// app.post('/Blogstone/blogstone-backend/upload', upload.single('img'), function (req, res, next){
+//   res.status(200).json("Image has been uploaded")
+// })
 //!!IF NEEDED, 1:24::
 
 app.use("/posts", postRoutes);
