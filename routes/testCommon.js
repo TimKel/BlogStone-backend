@@ -18,6 +18,7 @@ async function commonBeforeAll(){
     await db.query("DELETE FROM posts");
 
     await db.query("ALTER SEQUENCE users_id_seq RESTART WITH 1")
+    await db.query("ALTER SEQUENCE posts_id_seq RESTART WITH 1")
 
     // let user1 = await db.query("SELECT id FROM users WHERE username = 'u1'")
     // let user2 = await db.query("SELECT id FROM users WHERE username = 'u2'")
