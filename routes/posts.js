@@ -3,7 +3,7 @@ const { addPost } = require("../controllers/post.js");
 const Post = require("../models/post.js");
 const db = require("../db");
 const { NotFoundError, UnauthorizedError } = require("../expressError.js");
-const { ensureLoggedIn } = require("../middleware/auth.js");
+const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require("../middleware/auth.js");
 
 const router = express.Router()
 
@@ -104,13 +104,13 @@ router.get("/post/:id/update", async (req, res, next) => {
 });
 
 
-router.post("/", async (req, res, next) => {
+router.post("/", ensureLoggedIn, async (req, res, next) => {
     try {
         const post = await Post.addPost(req.body);
         console.log("POST", post)
         console.log("USERLOCAL", res.locals.user)
         // if(!res.locals.user) return res.redirect("/")
-        return res.json({post})
+        return res.status(201).json({post})
     } catch(err){
         return next(err)
     }
@@ -120,7 +120,7 @@ router.post("/", async (req, res, next) => {
 router.delete("/:id", ensureLoggedIn, async (req, res, next) => {
     try{
         await Post.removePost(req.params.id)
-        return res.json({ deleted: +req.params.id })
+        return res.status(202).json({ deleted: +req.params.id })
     } catch(err){
         return next(err);
     }
