@@ -1,8 +1,12 @@
 const express = require("express");
 const db = require("../db.js");
 const bcrypt = require("bcrypt");
+const jsonschema = require("jsonschema");
 const User = require("../models/user")
-const { createToken } = require("../helpers/tokens")
+const { createToken } = require("../helpers/tokens");
+const { BadRequestError } = require("../expressError.js");
+const newUserSchema = require("../schemas/NewUserSchema.json")
+const userAuthSchema = require("../schemas/UserAuth.json")
 
 const router = express.Router()
 
@@ -51,11 +55,12 @@ router.get("/", (req, res) => {
 
  router.post("/register", async function (req, res, next) {
     try {
-    //   const validator = jsonschema.validate(req.body, userRegisterSchema);
-    //   if (!validator.valid) {
-    //     const errs = validator.errors.map(e => e.stack);
-    //     throw new BadRequestError(errs);
-    //   }
+      const validator = jsonschema.validate(req.body, newUserSchema);
+      if (!validator.valid) {
+        const errs = validator.errors.map(e => e.stack);
+        console.log(errs)
+        throw new BadRequestError(errs);
+      }
   
       const newUser = await User.register({ ...req.body });
       const token = createToken(newUser);
@@ -75,11 +80,11 @@ router.get("/", (req, res) => {
 
 router.post("/token", async function (req, res, next) {
     try {
-    //   const validator = jsonschema.validate(req.body, userAuthSchema);
-    //   if (!validator.valid) {
-    //     const errs = validator.errors.map(e => e.stack);
-    //     throw new BadRequestError(errs);
-    //   }
+      const validator = jsonschema.validate(req.body, userAuthSchema);
+      if (!validator.valid) {
+        const errs = validator.errors.map(e => e.stack);
+        throw new BadRequestError(errs);
+      }
   
       const { username, password } = req.body;
       const user = await User.authenticate(username, password);
