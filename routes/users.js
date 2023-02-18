@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../models/user");
 const router = express.Router()
+const {ensureCorrectUserOrAdmin} = require("../middleware/auth.js")
 
 router.get("/", (req, res) => {
     res.json("USERS")
@@ -14,7 +15,7 @@ router.get("/", (req, res) => {
  * Authorization required: admin or same user-as-:username
  **/
 
- router.get("/:username", async function (req, res, next) {
+ router.get("/:username", ensureCorrectUserOrAdmin, async function (req, res, next) {
     try {
       const user = await User.get(req.params.username);
       return res.json({ user });
