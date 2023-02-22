@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { NotFoundError } = require("./expressError.js");
-const multer = require("multer");
+
 
 const postRoutes = require("./routes/posts.js");
 const authRoutes = require("./routes/auth.js");
@@ -17,12 +17,6 @@ app.use(cors());
 app.use(cookieParser());
 app.use(authenticateJWT);
 
-// //dest: becomes {storage}
-// const upload = multer({ dest: './uploads/' })
-// app.post('/Blogstone/blogstone-backend/upload', upload.single('img'), function (req, res, next){
-//   res.status(200).json("Image has been uploaded")
-// })
-//!!IF NEEDED, 1:24::
 
 app.use("/posts", postRoutes);
 app.use("/auth", authRoutes);
