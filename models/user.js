@@ -18,7 +18,7 @@ const { BCRYPT_WORK_FACTOR } = require("../config.js");
 class User {
     /** authenticate user with username, password.
      *
-     * Returns { username, first_name, last_name, email, is_admin }
+     * Returns { username, email }
      *
      * Throws UnauthorizedError is user not found or wrong password.
      **/
@@ -50,7 +50,7 @@ class User {
   
     /** Register user with data.
      *
-     * Returns { username, firstName, lastName, email, isAdmin }
+     * Returns { username, email }
      *
      * Throws BadRequestError on duplicates.
      **/
@@ -70,11 +70,8 @@ class User {
   
       const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
       
-      // console.log("FAKER", faker.image.avatar());
-      // const res = await axios.get(faker.image.imageUrl);
-      // console.log("RES", res)
       const profile_img = faker.image.avatar()
-      console.log("profile", profile_img)
+      
       const result = await db.query(
             `INSERT INTO users
              (username,
@@ -119,12 +116,6 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
 
-    // const userApplicationsRes = await db.query(
-    //       `SELECT a.job_id
-    //        FROM applications AS a
-    //        WHERE a.username = $1`, [username]);
-
-    // user.applications = userApplicationsRes.rows.map(a => a.job_id);
     return user;
   }
 
