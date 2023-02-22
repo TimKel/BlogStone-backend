@@ -3,10 +3,6 @@ const User = require("../models/user");
 const router = express.Router()
 const {ensureCorrectUserOrAdmin} = require("../middleware/auth.js")
 
-router.get("/", (req, res) => {
-    res.json("USERS")
-});
-
 /** GET /[username] => { user }
  *
  * Returns { username, firstName, lastName, isAdmin, jobs }
