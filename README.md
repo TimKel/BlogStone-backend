@@ -27,7 +27,7 @@ All posts are stored in a Postgresql Database, each post will have it's creators
 --- 
 DB is SQL using Postgres. There are two tables, Users and Posts. User passwords are encrypted using BCrypt. Users will have a one-to-many relationship with Posts as they can add/delete as many as they want.
 
-![DB-Schema](https://user-images.githubusercontent.com/91156228/220794494-1aa3baeb-63cb-4bc8-b44f-982fd5ad8214.png)
+![DB-Schema](https://user-images.githubusercontent.com/91156228/220794690-06453fae-cb08-409e-9321-ba6dc82d5cce.png)
 
 
 ## User Flow
