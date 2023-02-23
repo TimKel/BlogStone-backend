@@ -34,4 +34,4 @@ DB is SQL using Postgres. There are two tables, Users and Posts. User passwords 
 --- 
 Blogstone is a Single Page Application using React. Users do not need to create an account to view blogs but will need to create an account to enable them to create their own blog and edit/delete them.
 
-![User Flow](https://user-images.githubusercontent.com/91156228/209449636-d9b215a1-83ac-40ac-80f9-54f8bfc7e40d.png)
+![User Flow](https://user-images.githubusercontent.com/91156228/220796658-d10b5cc3-4a82-4cc4-b4d7-f66f0172135f.png))
