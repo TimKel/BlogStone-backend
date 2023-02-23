@@ -6,7 +6,7 @@ CREATE DATABASE blogstone;
 \connect blogstone 
 
 \i blogstone-schema.sql
--- \i blogstone-seed.sql 
+\i blogstone-seed.sql 
 
 \echo 'Delete and recreate blogstone_test db?'
 \prompt 'Return for yes or control-C to cancel > ' foo 
