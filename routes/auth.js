@@ -29,6 +29,7 @@ const router = express.Router()
   
       const newUser = await User.register({ ...req.body });
       const token = createToken(newUser);
+      
       return res.status(201).json({ token });
     } catch (err) {
       return next(err);
